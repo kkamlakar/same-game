@@ -19,28 +19,15 @@ export class SameGameComponent implements OnInit {
   rows = 10;
   cols = 10;
   colors = ['red', 'blue', 'green', 'yellow', 'purple'];
-  lastGridState: Tile[][] | null = null;  // <-- Add this
+  lastGridState: Tile[][] | null = null;
+  isGameOver: boolean = false;  // <-- Add this
 
-  getRemainingTilesByColor(): { [color: string]: number } {
-  const counts: { [color: string]: number } = {};
-  for (const row of this.grid) {
-    for (const tile of row) {
-      if (!tile.removed && tile.color) {
-        counts[tile.color] = (counts[tile.color] || 0) + 1;
-      }
-    }
-  }
-  return counts;
-}
-
-  getRemainingTiles(): number {
-  return this.grid.flat().filter(tile => !tile.removed && tile.color).length;
-}
   ngOnInit(): void {
     this.initGrid();
   }
 
   initGrid(): void {
+    this.isGameOver = false; // Reset game over status on new game
     this.grid = [];
     for (let r = 0; r < this.rows; r++) {
       const row: Tile[] = [];
@@ -56,13 +43,14 @@ export class SameGameComponent implements OnInit {
   }
 
   onTileClick(row: number, col: number): void {
+    if (this.isGameOver) return; // Prevent clicks after game over
+
     const target = this.grid[row][col];
     if (target.removed) return;
 
     const connected = this.getConnectedTiles(row, col, target.color);
     if (connected.length >= 2) {
-      // Save current grid for undo
-      this.lastGridState = this.grid.map(row => row.map(tile => ({...tile})));
+      this.lastGridState = this.grid.map(row => row.map(tile => ({ ...tile })));
 
       connected.forEach(([r, c]) => this.grid[r][c].removed = true);
       this.collapseTiles();
@@ -119,12 +107,29 @@ export class SameGameComponent implements OnInit {
 
     this.grid = finalGrid;
 
-    if (this.isGameOver()) {
-      setTimeout(() => alert('Game Over! No more moves available.'), 100);
+    if (this.isGameOverCheck()) {
+      // Instead of alert, set flag to show popup
+      this.isGameOver = true;
     }
   }
 
-  isGameOver(): boolean {
+  getRemainingTiles(): number {
+  return this.grid.flat().filter(tile => !tile.removed && tile.color).length;
+}
+
+  getRemainingTilesByColor(): { [color: string]: number } {
+    const counts: { [color: string]: number } = {};
+    for (const row of this.grid) {
+      for (const tile of row) {
+        if (!tile.removed && tile.color) {
+          counts[tile.color] = (counts[tile.color] || 0) + 1;
+        }
+      }
+    }
+    return counts;
+  }
+
+  isGameOverCheck(): boolean {
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const tile = this.grid[r][c];
@@ -139,13 +144,17 @@ export class SameGameComponent implements OnInit {
     return true; // no moves left
   }
 
-  undo(): void {
-  if (this.lastGridState) {
-    this.grid = this.lastGridState.map(row => row.map(tile => ({ ...tile })));
-    this.lastGridState = null;
-  } else {
-    alert('Nothing to undo');
+  restartGame(): void {
+    this.initGrid(); // Reset the grid and game state
   }
-}
 
+  undo(): void {
+    if (this.lastGridState) {
+      this.grid = this.lastGridState.map(row => row.map(tile => ({ ...tile })));
+      this.lastGridState = null;
+      this.isGameOver = false;
+    } else {
+      alert('Nothing to undo');
+    }
+  }
 }

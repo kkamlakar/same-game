@@ -6,6 +6,7 @@
     <p>Remaining Tiles: {{ getRemainingTiles() }}</p>
 
     <button (click)="undo()">Undo</button>
+    <button (click)="restartGame()">🔁 Restart</button>
   </div>
 
   <div class="grid">
@@ -18,4 +19,13 @@
       ></div>
     </div>
   </div>
+
+  <div *ngIf="isGameOver" class="overlay">
+  <div class="modal">
+    <p>🎮 Game Over!</p>
+  </div>
+</div>
+
+<!-- Your existing game grid -->
+
 </div>

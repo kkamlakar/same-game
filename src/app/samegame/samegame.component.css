@@ -1,6 +1,6 @@
 .grid {
   display: inline-block;
-  border: 2px solid #333;
+  border: 2px solid #838282;
   user-select: none;
   margin: 0 auto;
   /* To center horizontally */
@@ -21,7 +21,7 @@
 .tile {
   width: 50px;    /* bigger size */
   height: 50px;
-  margin: 2px;
+  margin: 1px;
   border: 1px solid #555;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -31,7 +31,7 @@
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .sidebar {
