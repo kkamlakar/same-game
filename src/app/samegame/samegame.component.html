@@ -1,0 +1,21 @@
+<div class="game-container">
+  <div class="sidebar">
+    <div *ngFor="let color of colors">
+      <span style="color: black">{{ color }}: {{ getRemainingTilesByColor()[color] || 0 }}</span>
+    </div>
+    <p>Remaining Tiles: {{ getRemainingTiles() }}</p>
+
+    <button (click)="undo()">Undo</button>
+  </div>
+
+  <div class="grid">
+    <div class="row" *ngFor="let row of grid; let r = index">
+      <div
+        class="tile"
+        *ngFor="let tile of row; let c = index"
+        [ngStyle]="{ 'background-color': tile.removed ? 'transparent' : tile.color }"
+        (click)="onTileClick(r, c)"
+      ></div>
+    </div>
+  </div>
+</div>

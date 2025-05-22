@@ -1,0 +1,42 @@
+.grid {
+  display: inline-block;
+  border: 2px solid #333;
+  user-select: none;
+  margin: 0 auto;
+  /* To center horizontally */
+}
+
+.row {
+  display: flex;
+}
+
+/* Make the parent container flex and center content */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* full viewport height */
+}
+
+.tile {
+  width: 50px;    /* bigger size */
+  height: 50px;
+  margin: 2px;
+  border: 1px solid #555;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-weight: bold;
+}
