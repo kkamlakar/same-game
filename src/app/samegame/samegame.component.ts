@@ -5,6 +5,7 @@ import { NgStyle, NgFor } from '@angular/common';
 interface Tile {
   color: string;
   removed: boolean;
+  hoverGroup?: boolean; // for visual feedback
 }
 
 @Component({
@@ -20,6 +21,7 @@ export class SameGameComponent implements OnInit {
   cols = 10;
   colors = ['red', 'blue', 'green', 'yellow', 'purple'];
   lastGridState: Tile[][] | null = null;
+  hoveredGroup: [number, number][] = [];
   isGameOver: boolean = false;  // <-- Add this
 
   ngOnInit(): void {
@@ -157,4 +159,52 @@ export class SameGameComponent implements OnInit {
       alert('Nothing to undo');
     }
   }
+onTileHover(row: number, col: number): void {
+  const tile = this.grid[row][col];
+  if (tile.removed) {
+    this.hoveredGroup = [];
+    return;
+  }
+
+  const group = this.getConnectedTiles(row, col, tile.color);
+  this.hoveredGroup = group.length >= 2 ? group : [];
 }
+
+onTileLeave(): void {
+  this.hoveredGroup = [];
+}
+
+isHovered(row: number, col: number): boolean {
+  return this.hoveredGroup.some(([r, c]) => r === row && c === col);
+}
+
+
+findConnectedGroup(r: number, c: number, color: string): [number, number][] {
+  const visited = new Set<string>();
+  const group: [number, number][] = [];
+
+  const stack: [number, number][] = [[r, c]];
+  const isValid = (i: number, j: number) =>
+    i >= 0 &&
+    j >= 0 &&
+    i < this.grid.length &&
+    j < this.grid[0].length &&
+    !this.grid[i][j].removed &&
+    this.grid[i][j].color === color &&
+    !visited.has(`${i},${j}`);
+
+  while (stack.length) {
+    const [i, j] = stack.pop()!;
+    if (!isValid(i, j)) continue;
+
+    visited.add(`${i},${j}`);
+    group.push([i, j]);
+
+    stack.push([i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]);
+  }
+
+  return group;
+}
+
+}
+

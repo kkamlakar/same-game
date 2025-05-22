@@ -40,3 +40,28 @@
   gap: 10px;
   font-weight: bold;
 }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+.tile.hovered {
+  outline: 2px solid #a69090;
+  filter: brightness(1.2);
+  cursor: pointer;
+}

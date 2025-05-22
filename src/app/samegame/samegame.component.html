@@ -15,17 +15,18 @@
         class="tile"
         *ngFor="let tile of row; let c = index"
         [ngStyle]="{ 'background-color': tile.removed ? 'transparent' : tile.color }"
+        [ngClass]="{ 'hovered': isHovered(r, c) }"
         (click)="onTileClick(r, c)"
+        (mouseenter)="onTileHover(r, c)"
+        (mouseleave)="onTileLeave()"
       ></div>
     </div>
   </div>
 
   <div *ngIf="isGameOver" class="overlay">
-  <div class="modal">
-    <p>🎮 Game Over!</p>
+    <div class="modal">
+      <p>🎮 Game Over! No more moves available.</p>
+      <button (click)="restartGame()">🔁 Restart Game</button>
+    </div>
   </div>
-</div>
-
-<!-- Your existing game grid -->
-
 </div>
